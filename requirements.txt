@@ -1,5 +1,5 @@
 # Mentor Scoring AI - Dependencies
-# Python 3.10 required (see .python-version)
+# Python 3.10 required (configured in Render.com Environment settings)
 
 # Web Framework
 streamlit>=1.31.0
@@ -13,9 +13,10 @@ openai>=1.0.0
 # Content Evaluation (Groq API)
 groq>=0.4.0
 
-# Posture Analysis (pinned for compatibility)
+# Posture Analysis (MediaPipe 0.10.9 requires protobuf <4)
 mediapipe==0.10.9
 opencv-python>=4.8.0
+protobuf>=3.11,<4
 
 # Audio Processing
 librosa>=0.10.0
@@ -26,7 +27,3 @@ ffmpeg-python>=0.2.0
 
 # Utilities
 numpy>=1.24.0,<2.0.0
-
-# TensorFlow and Protobuf (pinned for MediaPipe 0.10.9)
-tensorflow==2.15.0
-protobuf==4.23.4
