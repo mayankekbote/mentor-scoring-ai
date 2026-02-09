@@ -16,7 +16,6 @@ groq>=0.4.0
 # Posture Analysis (MediaPipe 0.10.9 requires protobuf <4)
 mediapipe==0.10.9
 opencv-python>=4.8.0
-protobuf>=3.11,<4
 
 # Audio Processing
 librosa>=0.10.0
@@ -27,3 +26,6 @@ ffmpeg-python>=0.2.0
 
 # Utilities
 numpy>=1.24.0,<2.0.0
+
+# Protobuf (must be <4 for MediaPipe 0.10.9)
+protobuf>=3.11,<4
