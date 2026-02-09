@@ -1,5 +1,5 @@
 # Mentor Scoring AI - Dependencies
-# All dependencies are CPU-compatible, no GPU required
+# Python 3.10 required (see .python-version)
 
 # Web Framework
 streamlit>=1.31.0
@@ -7,44 +7,26 @@ streamlit>=1.31.0
 # Environment variables
 python-dotenv>=1.0.0
 
-# Speech-to-Text (OpenAI Whisper API - much faster than CPU-based)
+# Speech-to-Text (OpenAI Whisper API)
 openai>=1.0.0
 
-# Content Evaluation (Groq API - much faster than local Ollama)
+# Content Evaluation (Groq API)
 groq>=0.4.0
 
-# Computer Vision# Posture Analysis
-mediapipe>=0.10.30
-
-# Video/Audio Processing
+# Posture Analysis (pinned for compatibility)
+mediapipe==0.10.9
 opencv-python>=4.8.0
-librosa>=0.10.0
-soundfile>=0.12.0
-ffmpeg-python>=0.2.0
-
-# Utilities
-numpy>=1.24.0
-
-# TensorFlow (MediaPipe dependency - pinned for compatibility)
-tensorflow==2.15.0
-
-# Protobuf (pinned for MediaPipe/TensorFlow compatibility)
-protobuf==4.23.4
 
 # Audio Processing
-librosa>=0.10.1
-soundfile>=0.12.1  # Required by librosa for audio I/O
+librosa>=0.10.0
+soundfile>=0.12.0
 
+# Video Processing
 ffmpeg-python>=0.2.0
 
-# Numerical Computing
-numpy>=1.24.0,<2.0.0  # MediaPipe compatibility
-
-# Protobuf (pinned for MediaPipe/TensorFlow compatibility)
-protobuf==4.25.3
-
-# HTTP Requests (for Ollama)
-requests>=2.31.0
-
 # Utilities
-tqdm>=4.66.0  # Progress bars for processing
+numpy>=1.24.0,<2.0.0
+
+# TensorFlow and Protobuf (pinned for MediaPipe 0.10.9)
+tensorflow==2.15.0
+protobuf==4.23.4
