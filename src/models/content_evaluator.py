@@ -217,6 +217,126 @@ class ContentEvaluator:
         return aggregated
 
 
+    def generate_comprehensive_summary(self, full_transcript: str) -> Dict[str, str]:
+        """
+        Generate a comprehensive summary of the entire teaching session.
+        
+        Args:
+            full_transcript: Complete transcript of all chunks
+            
+        Returns:
+            Dictionary with:
+            - topic: What the teacher was trying to explain
+            - what_went_well: Positive aspects of the teaching
+            - improvements: Specific suggestions for improvement
+            - success: bool (whether generation succeeded)
+            - error: Optional error message
+        """
+        if not full_transcript or len(full_transcript.strip()) < 10:
+            return {
+                'topic': 'Insufficient content',
+                'what_went_well': 'N/A',
+                'improvements': 'N/A',
+                'success': False,
+                'error': 'Transcript too short'
+            }
+        
+        # Build prompt
+        prompt = config.COMPREHENSIVE_SUMMARY_PROMPT.format(transcript=full_transcript)
+        
+        try:
+            # Get Groq client
+            client = self.get_groq_client()
+            
+            # Call Groq API
+            response = client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {"role": "system", "content": "You are an expert educational content evaluator. Respond only with valid JSON."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.3,
+                max_tokens=800  # More tokens for comprehensive summary
+            )
+            
+            # Parse response
+            llm_output = response.choices[0].message.content
+            
+            # Extract JSON from response
+            summary = self._parse_summary_response(llm_output)
+            
+            if summary:
+                summary['success'] = True
+                return summary
+            else:
+                return self._error_summary_response("Failed to parse LLM response")
+                
+        except Exception as e:
+            return self._error_summary_response(f"Groq API error: {str(e)}")
+    
+    def _parse_summary_response(self, llm_output: str) -> Optional[Dict]:
+        """
+        Parse JSON from LLM output for comprehensive summary.
+        
+        Args:
+            llm_output: Raw LLM response
+            
+        Returns:
+            Parsed summary dict or None
+        """
+        try:
+            # Try direct JSON parse first
+            data = json.loads(llm_output)
+            return self._validate_summary(data)
+        except json.JSONDecodeError:
+            # Try to extract JSON from text
+            start = llm_output.find('{')
+            end = llm_output.rfind('}')
+            
+            if start != -1 and end != -1:
+                json_str = llm_output[start:end+1]
+                try:
+                    data = json.loads(json_str)
+                    return self._validate_summary(data)
+                except json.JSONDecodeError:
+                    pass
+        
+        return None
+    
+    def _validate_summary(self, data: Dict) -> Optional[Dict]:
+        """
+        Validate comprehensive summary data.
+        
+        Args:
+            data: Parsed JSON data
+            
+        Returns:
+            Validated dict or None
+        """
+        required_keys = ['topic', 'what_went_well', 'improvements']
+        
+        if not all(key in data for key in required_keys):
+            return None
+        
+        # Ensure all values are strings
+        for key in required_keys:
+            if not isinstance(data[key], str):
+                data[key] = str(data[key])
+        
+        return data
+    
+    def _error_summary_response(self, error_msg: str) -> Dict:
+        """Generate error response for comprehensive summary."""
+        return {
+            'topic': 'Summary unavailable',
+            'what_went_well': 'Unable to generate summary',
+            'improvements': 'Unable to generate summary',
+            'success': False,
+            'error': error_msg
+        }
+
+
+
 def evaluate_transcript(transcript: str) -> Dict[str, any]:
     """
     Convenience function to evaluate a transcript.

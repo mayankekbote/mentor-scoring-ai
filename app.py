@@ -25,31 +25,21 @@ st.set_page_config(
 )
 
 
-def check_dependencies():
-    """
-    Check if all required dependencies are available.
+# def check_dependencies():
+#     """
+#     Check if all required dependencies are available.
     
-    Returns:
-        Tuple of (success: bool, message: str)
-    """
-    # Check Groq API key
-    import os
-    if not os.getenv("GROQ_API_KEY"):
-        return False, """
-        ⚠️ **Groq API key is not set.**
-        
-        Please set your Groq API key:
-        1. Get free key: https://console.groq.com/keys
-        2. Set environment variable:
-           ```
-           $env:GROQ_API_KEY="your-key-here"
-           ```
-        3. Restart the app
-        
-        Groq is 10-20x faster than local Ollama!
-        """
+#     Returns:
+#         Tuple of (success: bool, message: str)
+#     """
+#     # Check Groq API key
+#     import os
+#     if not os.getenv("GROQ_API_KEY"):
+#         return False, """
+#         ⚠️ **Groq API key is not set.**
+#         """
     
-    return True, "All dependencies available ✓"
+#     return True, "All dependencies available ✓"
 
 
 def save_uploaded_file(uploaded_file) -> str:
@@ -140,11 +130,31 @@ def display_results(result: dict):
         st.markdown("### 🎯 Engagement")
         st.info(feedback['engagement'])
     
-    # Content summary
-    if result.get('content_summary'):
+    # Comprehensive summary
+    if result.get('comprehensive_summary'):
         st.markdown("---")
-        st.markdown("## 📝 Content Summary")
-        st.write(result['content_summary'])
+        st.markdown("## 📝 Teaching Summary")
+        
+        summary = result['comprehensive_summary']
+        
+        if summary.get('success', False):
+            # Topic
+            st.markdown("### 🎯 Topic Covered")
+            st.info(summary.get('topic', 'N/A'))
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                # What went well
+                st.markdown("### ✅ What Went Well")
+                st.success(summary.get('what_went_well', 'N/A'))
+            
+            with col2:
+                # Improvements
+                st.markdown("### 💡 Suggestions for Improvement")
+                st.warning(summary.get('improvements', 'N/A'))
+        else:
+            st.warning(f"Summary generation failed: {summary.get('error', 'Unknown error')}")
     
     # Full transcript (expandable)
     if result.get('full_transcript'):
@@ -162,26 +172,14 @@ def main():
     """Main application logic."""
     
     # Header
-    st.title("🎓 Mentor Scoring AI")
-    st.markdown("""
-    Evaluate teaching performance from video using AI-powered analysis of:
-    - **Body posture** (MediaPipe)
-    - **Voice quality** (Librosa)
-    - **Content quality** (Ollama LLM)
-    """)
-    
-    # Check dependencies
-    deps_ok, deps_msg = check_dependencies()
-    if not deps_ok:
-        st.error(deps_msg)
-        st.stop()
-    else:
-        st.success(deps_msg)
-    
-    st.markdown("---")
-    
+    st.markdown(
+    "<h1 style='text-align: center; color:#222;'>Mentora 🧑‍🏫</h1>",
+    unsafe_allow_html=True
+)
+
+
     # File upload
-    st.markdown("### 📹 Upload Video")
+    st.markdown("#### 📹 Upload Video")
     uploaded_file = st.file_uploader(
         "Choose a video file (MP4)",
         type=['mp4'],
@@ -194,7 +192,7 @@ def main():
         st.info(f"**File:** {uploaded_file.name} ({file_size_mb:.1f} MB)")
         
         # Process button
-        if st.button("🚀 Analyze Video", type="primary"):
+        if st.button("🚀 Analyze Video", type="primary",width="stretch"):
             # Save uploaded file
             with st.spinner("Saving video..."):
                 video_path = save_uploaded_file(uploaded_file)
@@ -259,12 +257,7 @@ def main():
     
     # Footer
     st.markdown("---")
-    st.markdown("""
-    <div style='text-align: center; color: gray; font-size: 12px;'>
-        <p>Mentor Scoring AI v1.0 | Built with Streamlit, MediaPipe, Faster-Whisper, and Ollama</p>
-        <p>CPU-optimized for production use | No GPU required</p>
-    </div>
-    """, unsafe_allow_html=True)
+   
 
 
 if __name__ == "__main__":

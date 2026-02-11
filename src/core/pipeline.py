@@ -164,6 +164,10 @@ class ProcessingPipeline:
             # Aggregate content evaluations
             aggregated_content = self._aggregate_evaluations(chunk_evaluations)
             
+            # Generate comprehensive summary from full transcript
+            full_transcript = '\n\n'.join(chunk_transcripts)
+            comprehensive_summary = self.content_evaluator.generate_comprehensive_summary(full_transcript)
+            
             # Compute final score
             final_result = self.scoring_engine.compute_final_score(
                 posture_score,
@@ -179,9 +183,9 @@ class ProcessingPipeline:
                 final_result['breakdown']
             )
             
-            # Add full transcript
-            final_result['full_transcript'] = '\n\n'.join(chunk_transcripts)
-            final_result['content_summary'] = aggregated_content.get('summary', '')
+            # Add full transcript and comprehensive summary
+            final_result['full_transcript'] = full_transcript
+            final_result['comprehensive_summary'] = comprehensive_summary
             
             yield {
                 'stage': 'complete',
@@ -250,13 +254,12 @@ class ProcessingPipeline:
                 'summary': 'Content evaluation unavailable'
             }
         
-        # Average scores
+        # Average scores (no summary - will be generated comprehensively later)
         aggregated = {
             'clarity': np.mean([e['clarity'] for e in valid_evals]),
             'structure': np.mean([e['structure'] for e in valid_evals]),
             'technical': np.mean([e['technical'] for e in valid_evals]),
-            'engagement': np.mean([e['engagement'] for e in valid_evals]),
-            'summary': ' | '.join([e['summary'] for e in valid_evals])
+            'engagement': np.mean([e['engagement'] for e in valid_evals])
         }
         
         return aggregated

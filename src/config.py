@@ -21,6 +21,7 @@ import os
 # Model: llama-3.1-8b-instant (very fast)
 
 # MediaPipe Pose Configuration
+MEDIAPIPE_USE_GPU = True  # Set to False to force CPU mode
 MEDIAPIPE_STATIC_IMAGE_MODE = True
 MEDIAPIPE_ENABLE_SEGMENTATION = False
 MEDIAPIPE_SMOOTH_LANDMARKS = False
@@ -50,7 +51,7 @@ WEIGHT_AUDIO = 0.25    # 25%
 WEIGHT_CONTENT = 0.30  # 30%
 WEIGHT_ENGAGEMENT = 0.20  # 20%
 
-# Score bounds
+# Score bounds    
 MIN_SCORE = 0
 MAX_SCORE = 100
 
@@ -103,6 +104,24 @@ Respond ONLY with valid JSON in this exact format:
   "engagement": <number 0-100>,
   "summary": "<brief 1-2 sentence summary in English>"
 }}
+"""
+
+# Comprehensive summary prompt for entire teaching session
+COMPREHENSIVE_SUMMARY_PROMPT = """You are an expert educational content evaluator. Analyze the following complete transcript from a teaching session and provide a comprehensive summary.
+
+The transcript may contain Hindi, English, or Hinglish (mixed).
+
+Full Transcript:
+{transcript}
+
+Provide a comprehensive analysis in the following JSON format:
+{{
+  "topic": "<what the teacher was trying to explain - 1 sentence>",
+  "what_went_well": "<positive aspects of the teaching - 2-3 sentences>",
+  "improvements": "<specific suggestions for improvement - 2-3 sentences>"
+}}
+
+Respond ONLY with valid JSON.
 """
 
 # ============================================================================

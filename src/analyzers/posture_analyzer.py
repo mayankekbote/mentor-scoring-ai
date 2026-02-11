@@ -154,7 +154,7 @@ class PostureAnalyzer:
         
         if not scores:
             # No valid detections
-            return 50  # Neutral score
+            return 20  # Neutral score
         
         # Weighted average by confidence
         weighted_score = np.average(scores, weights=confidences)
