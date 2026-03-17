@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand color: Teal #0d9488 */
+  --color-background: #f1f4f5;
+  --color-brand-sage: #0d9488;
+  --color-brand-sage-dark: #0f766e;
+  
+  /* Slate-based neutrals */
+  --color-slate-900: #0f172a;
+  --color-slate-700: #334155;
+  --color-slate-500: #64748b;
+  --color-slate-400: #94a3b8;
+  --color-slate-300: #cbd5e1;
+  --color-slate-200: #e2e8f0;
+  --color-slate-100: #f1f5f9;
+
+  --font-sans: "Inter", "system-ui", "sans-serif";
+
+  --radius-xl: 0.75rem; /* rounded-xl is usually 0.75rem */
+}
+
+@layer base {
+  body {
+    @apply bg-background text-slate-700 font-sans antialiased text-sm leading-relaxed;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-black text-slate-900 tracking-tight;
+  }
+}
+
+@layer components {
+  /* Primary Button: Solid Teal */
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg bg-brand-sage px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-brand-sage-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sage disabled:opacity-50;
+  }
+
+  /* Secondary Button: Borderless text links */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center text-sm font-medium text-slate-500 transition-colors hover:text-slate-900 focus-visible:outline-none disabled:opacity-50;
+  }
+
+  /* Cards: White, slate-200 border, rounded-xl, no idle shadow */
+  .card {
+    @apply rounded-xl border border-slate-200 bg-white p-6 transition-all hover:shadow-sm;
+  }
+
+  /* Inputs: Subtle icons, slate-200 border */
+  .input {
+    @apply flex h-11 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-sage disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  /* Label: text-xs uppercase tracking-wide */
+  .label {
+    @apply text-xs font-semibold uppercase tracking-wide text-slate-500;
+  }
+}
+
+@media print {
+  .no-print, 
+  nav, 
+  button, 
+  .btn,
+  aside,
+  header {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .card {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+}
+
+.print-only {
+  display: none;
+}

@@ -1,31 +1,32 @@
-# Mentor Scoring AI - Dependencies
-# Python 3.10 required (configured in Render.com Environment settings)
+# MentorAI — Full Stack Dependencies
+# Python 3.10+
 
-# Web Framework
-streamlit>=1.31.0
-
-# Environment variables
+# ── Environment Variables ──────────────────────────────────────────────────
 python-dotenv>=1.0.0
 
-# Speech-to-Text (OpenAI Whisper API)
+# ── AI Engine (existing pipeline) ─────────────────────────────────────────
 openai>=1.0.0
-
-# Content Evaluation (Groq API)
 groq>=0.4.0
-
-# Posture Analysis (MediaPipe 0.10.9 requires protobuf <4)
 mediapipe==0.10.9
 opencv-python>=4.8.0
-
-# Audio Processing
 librosa>=0.10.0
 soundfile>=0.12.0
-
-# Video Processing
 ffmpeg-python>=0.2.0
-
-# Utilities
 numpy>=1.24.0,<2.0.0
-
-# Protobuf (must be <4 for MediaPipe 0.10.9)
 protobuf>=3.11,<4
+
+# ── Backend — FastAPI ──────────────────────────────────────────────────────
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+python-multipart>=0.0.9       # file uploads
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+
+# ── Database — PostgreSQL + SQLAlchemy ────────────────────────────────────
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.0
+alembic>=1.13.0
+
+# ── Auth ───────────────────────────────────────────────────────────────────
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4

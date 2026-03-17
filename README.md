@@ -1,83 +1,106 @@
-# Mentor Scoring AI
+# MentorAI — Intelligent Interview Evaluation Platform
 
-Production-quality AI prototype for evaluating teacher/mentor performance from video.
+MentorAI is a full-stack platform designed to automate the evaluation of teaching and speaking demonstrations using AI. It analyzes video submissions for content accuracy, vocal clarity, and body language, providing structured feedback and scores for candidates.
 
-## 🚀 Quick Start
+## 🚀 Presentation Features
+- **AI Video Pipeline**: Automated processing using OpenAI Whisper (Transcription) and Groq (LLM Analysis).
+- **Physical Analysis**: MediaPipe for posture and confidence scoring.
+- **Vocal Metrics**: Volume and energy analysis via Librosa.
+- **Admin Dashboard**: Comprehensive management of candidates, interview codes, and organization-scoped data.
+- **Interview Invitations**: One-click automated scheduling with professional HTML email invitations.
 
-**📖 Complete setup instructions**: See **[docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md)**
+---
 
-### TL;DR
+## 🛠️ Tech Stack
+- **Frontend**: React.js, Vite, TailwindCSS, Lucide Icons.
+- **Backend**: FastAPI (Python), SQLAlchemy, PostgreSQL/SQLite.
+- **AI Layer**: OpenAI Whisper, Groq (Llama-3), MediaPipe, CV2.
 
-1. **Install dependencies:**
+---
+
+## 📋 Prerequisites
+Before you begin, ensure you have the following installed on your machine:
+- **Python 3.10+**
+- **Node.js (v18+)** & **npm**
+- **PostgreSQL** (Optional — SQLite is default for dev)
+- **FFmpeg**: **Required** for video processing.
+  - *Windows*: `choco install ffmpeg` or download from [ffmpeg.org](https://ffmpeg.org/download.html).
+  - *macOS*: `brew install ffmpeg`
+  - *Linux*: `sudo apt install ffmpeg`
+
+---
+
+## ⚙️ Installation & Setup
+
+### 1. Clone the Repository
+```bash
+git clone <repository-url>
+cd mentorAI
+```
+
+### 2. Backend Setup
+1. **Create a Virtual Environment:**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+2. **Install Dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
+3. **Environment Configuration:**
+   - Copy `.env.example` to `.env`:
+     ```bash
+     cp .env.example .env
+     ```
+   - Open `.env` and fill in your API keys:
+     - `OPENAI_API_KEY`: For Whisper transcription.
+     - `GROQ_API_KEY`: For high-speed LLM evaluation.
+     - `DATABASE_URL`: Your Postgres or SQLite connection string.
+     - `SMTP` settings: Required for invitation emails.
 
-2. **Create `.env` file** (copy from `.env.example`):
-   ```
-   OPENAI_API_KEY=your-key-here
-   GROQ_API_KEY=your-key-here
-   ```
-
-3. **Run:**
+### 3. Frontend Setup
+1. **Navigate to the frontend directory:**
    ```bash
-   streamlit run app.py
+   cd frontend
+   ```
+2. **Install npm packages:**
+   ```bash
+   npm install
    ```
 
-## 📖 Documentation
+---
 
-- **[SETUP_GUIDE.md](docs/SETUP_GUIDE.md)** - Complete installation and usage guide ⭐
-- **[RESTRUCTURING.md](docs/RESTRUCTURING.md)** - Project structure explanation
+## 🏃 Running the Project
 
-## 🎯 Features
+### 1. Start the Backend
+From the root directory (`mentorAI`):
+```bash
+uvicorn backend.main:app --reload
+```
+- API will be available at `http://localhost:8000`
+- Interactive API Docs: `http://localhost:8000/docs`
 
-- **Posture Analysis**: MediaPipe Pose for body alignment scoring
-- **Voice Analysis**: RMS energy extraction for volume quality
-- **Speech-to-Text**: OpenAI Whisper API (10x faster than CPU)
-- **Content Evaluation**: Groq API for teaching quality assessment (20x faster than local LLM)
-- **Progressive UI**: Real-time updates during processing
-- **Scalable**: Handles 1-60 minute videos efficiently
+### 2. Start the Frontend
+From the `frontend` directory:
+```bash
+npm run dev
+```
+- Application will start at `http://localhost:5173`
+
+---
 
 ## 📁 Project Structure
+- `/backend`: FastAPI server, SQLAlchemy models, and API routes.
+- `/frontend`: React application with Vite and Tailwind.
+- `/ai_engine`: Core AI logic for video, audio, and content analysis.
+- `/storage`: Local directory for uploaded videos and temporary processing files.
 
-```
-mentorAI/
-├── app.py                    # Streamlit web application (entry point)
-├── requirements.txt          # Python dependencies
-├── .env.example             # API keys template
-├── .env                     # Your API keys (create this)
-│
-├── src/                     # Source code
-│   ├── config.py           # Configuration
-│   ├── core/               # Core logic (pipeline, video, scoring)
-│   ├── analyzers/          # Posture & audio analysis
-│   └── models/             # AI model wrappers (OpenAI, Groq)
-│
-├── docs/                    # Documentation
-│   ├── SETUP_GUIDE.md      # Complete setup guide
-│   └── RESTRUCTURING.md    # Project structure
-│
-└── scripts/                 # Helper scripts
-    └── run_app.ps1         # Windows launcher
-```
+---
 
-## 📊 Performance
+## 📝 Credentials
+- **Admin Registration**: You can create the first admin using the signup page.
+- **Organizations**: All data is isolated by `organization_name` provided during registration.
 
-**Processing time for 6-minute video:**
-- Transcription: ~24 seconds (OpenAI Whisper)
-- Content evaluation: ~36 seconds (Groq)
-- Audio + Posture: ~5 seconds
-- **Total: ~65 seconds**
-
-## 🛠️ Tech Stack
-
-- **Frontend**: Streamlit
-- **Speech-to-Text**: OpenAI Whisper API
-- **Content Evaluation**: Groq API (llama-3.1-8b-instant)
-- **Posture Analysis**: MediaPipe Pose
-- **Audio Processing**: librosa
-- **Video Processing**: ffmpeg, opencv
-
-## 📝 License
-
-Educational prototype - built for demonstration purposes.
+## ⚠️ Important Note
+Ensure **FFmpeg** is in your system's PATH. Without it, the AI engine will fail to extract audio and frames from the uploaded videos.
